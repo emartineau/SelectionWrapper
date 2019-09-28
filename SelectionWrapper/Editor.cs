@@ -25,7 +25,8 @@ namespace SelectionWrapper
 
         ITextSnapshot _snapshot;
         int changeIndex;
-        string span;
+        NormalizedSnapshotSpanCollection snapshotSpans;
+        //string span;
         ITextSelection textSelection;
 
         private Dictionary<char, char> charPairs = new Dictionary<char, char>()
@@ -48,47 +49,51 @@ namespace SelectionWrapper
 
         private void TextBuffer_PostChanged(object sender, EventArgs e)
         {
-            var textBuffer = sender as ITextBuffer;
-            var textEdit = textBuffer.CreateEdit();
-            char leftChar = textSelection.End.Position.Subtract(1).GetChar();
-            if (charPairs.ContainsKey(leftChar))
+            if (snapshotSpans.Any(span => !span.IsEmpty))
             {
-                char rightChar = charPairs[leftChar];
-                string wrappedSelectionText = (span.Length == 0) ? "" : $"{span}{rightChar}";
-                textEdit.Insert(textSelection.Start.Position, wrappedSelectionText);
-            }
+                var textBuffer = sender as ITextBuffer;
+                var textEdit = textBuffer.CreateEdit();
+                var currentPosition = textSelection.End.Position;
+                if (currentPosition.Position == 0)
+                {
+                    return;
+                }
+                currentPosition = currentPosition.Subtract(1);
+                if (currentPosition.Position == textBuffer.CurrentSnapshot.Length)
+                {
+                    return;
+                }
 
-            if (textEdit.HasEffectiveChanges)
-            {
-                textEdit.Apply();
-            }
+                char leftChar = currentPosition.GetChar();
 
-            textEdit.Dispose();
+                if (charPairs.ContainsKey(leftChar))
+                {
+                    char rightChar = charPairs[leftChar];
+                    var selectedText = new StringBuilder();
+                    selectedText = snapshotSpans.Aggregate(
+                        selectedText,
+                        (spansAsTextSoFar, span) => spansAsTextSoFar.Append(span.GetText()));
+                    string wrappedSelectionText = $"{selectedText.ToString()}{rightChar}";
+                    textEdit.Insert(textSelection.Start.Position, wrappedSelectionText);
+                }
+
+                if (textEdit.HasEffectiveChanges)
+                {
+                    textEdit.Apply();
+                }
+                else
+                {
+                    textEdit.Cancel();
+                }
+
+                textEdit.Dispose();
+            }
         }
 
         private void TextBuffer_Changing(object sender, TextContentChangingEventArgs e)
         {
-            //if (e.EditTag is ITypingEditTag)
-            //{
-
-            //var currentBuffer = sender as ITextBuffer;
-            //var previousBuffer = e.Before.TextBuffer;
-            //var defaultDifferencingService = TextDifferencingService.DefaultTextDifferencingService;
-            
-            //var difference = defaultDifferencingService.DiffStrings(
-            //  currentBuffer.CurrentSnapshot.GetText(),
-            //previousBuffer.CurrentSnapshot.GetText(),
-            //new StringDifferenceOptions());
-            
-            //changeIndex = _textView.Selection.Start.Position;
-            //span = _textView.Selection.StreamSelectionSpan.SnapshotSpan;
-
             textSelection = _textView.Selection;
-            span = textSelection.SelectedSpans.First().GetText();
-
-            //currentBuffer.CurrentSnapshot.CreateTrackingPoint(changeIndex.Position.Snapshot)
-            //selection.Wrap();
-            //}
+            snapshotSpans = textSelection.SelectedSpans;
         }
     }
 }
