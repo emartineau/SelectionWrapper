@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SelectionWrapper
 {
@@ -16,17 +15,9 @@ namespace SelectionWrapper
     [TextViewRole(PredefinedTextViewRoles.Document)]
     internal sealed class EditorListener : IWpfTextViewCreationListener
     {
-        Selection selection;
-
-        [Import]
-        ITextDifferencingSelectorService TextDifferencingService = null;
-
         IWpfTextView _textView;
 
-        ITextSnapshot _snapshot;
-        int changeIndex;
         NormalizedSnapshotSpanCollection snapshotSpans;
-        //string span;
         ITextSelection textSelection;
 
         private Dictionary<char, char> charPairs = new Dictionary<char, char>()
@@ -44,7 +35,6 @@ namespace SelectionWrapper
             _textView = textView;
             textView.TextBuffer.Changing += TextBuffer_Changing;
             textView.TextBuffer.PostChanged += TextBuffer_PostChanged;
-            selection = new Selection(textView.Selection);
         }
 
         private void TextBuffer_PostChanged(object sender, EventArgs e)

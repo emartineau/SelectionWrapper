@@ -1,0 +1,16 @@
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\bin\Release\SelectionWrapper.dll
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\bin\Release\SelectionWrapper.pdb
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\bin\Release\SelectionWrapper.pkgdef
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\bin\Release\SelectionWrapper.vsix
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\bin\Release\extension.vsixmanifest
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Release\SelectionWrapper.csprojAssemblyReference.cache
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Release\_EmptyResource.resources
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Release\SelectionWrapper.csproj.GenerateResource.cache
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Release\SelectionWrapper.csproj.CoreCompileInputs.cache
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Release\SelectionWrapper.dll
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Release\SelectionWrapper.pdb
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Release\SelectionWrapper.pkgdef
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Release\SelectionWrapper.latest.pkgdef
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Release\extension.vsixmanifest
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Release\files.json
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Release\createTemplateManifests.cache
