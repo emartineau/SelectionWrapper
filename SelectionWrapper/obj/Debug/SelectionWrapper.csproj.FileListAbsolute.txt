@@ -3,7 +3,6 @@ E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\bin\Debug\SelectionW
 E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\bin\Debug\SelectionWrapper.pkgdef
 E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\bin\Debug\SelectionWrapper.vsix
 E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\bin\Debug\extension.vsixmanifest
-E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Debug\SelectionWrapper.csprojAssemblyReference.cache
 E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Debug\_EmptyResource.resources
 E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Debug\SelectionWrapper.csproj.GenerateResource.cache
 E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Debug\SelectionWrapper.csproj.CoreCompileInputs.cache
@@ -14,3 +13,4 @@ E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Debug\SelectionW
 E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Debug\extension.vsixmanifest
 E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Debug\files.json
 E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Debug\createTemplateManifests.cache
+E:\Projects\Visual Studio\SelectionWrapper\SelectionWrapper\obj\Debug\SelectionWrapper.csprojAssemblyReference.cache

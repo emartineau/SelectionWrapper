@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Differencing;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using System;
@@ -15,10 +14,12 @@ namespace SelectionWrapper
     [TextViewRole(PredefinedTextViewRoles.Document)]
     internal sealed class EditorListener : IWpfTextViewCreationListener
     {
-        IWpfTextView _textView;
+        private IWpfTextView _textView;
 
-        NormalizedSnapshotSpanCollection snapshotSpans;
-        ITextSelection textSelection;
+        private NormalizedSnapshotSpanCollection snapshotSpans;
+        private ITextSelection textSelection;
+        private int selectionLength;
+
 
         private Dictionary<char, char> charPairs = new Dictionary<char, char>()
         {
@@ -39,10 +40,10 @@ namespace SelectionWrapper
 
         private void TextBuffer_PostChanged(object sender, EventArgs e)
         {
-            if (snapshotSpans.Any(span => !span.IsEmpty))
+            if (selectionLength > 0)
             {
+                selectionLength = 0;
                 var textBuffer = sender as ITextBuffer;
-                var textEdit = textBuffer.CreateEdit();
                 var currentPosition = textSelection.End.Position;
                 if (currentPosition.Position == 0)
                 {
@@ -64,19 +65,21 @@ namespace SelectionWrapper
                         selectedText,
                         (spansAsTextSoFar, span) => spansAsTextSoFar.Append(span.GetText()));
                     string wrappedSelectionText = $"{selectedText.ToString()}{rightChar}";
+
+                    var textEdit = textBuffer.CreateEdit();
                     textEdit.Insert(textSelection.Start.Position, wrappedSelectionText);
-                }
 
-                if (textEdit.HasEffectiveChanges)
-                {
-                    textEdit.Apply();
-                }
-                else
-                {
-                    textEdit.Cancel();
-                }
+                    if (textEdit.HasEffectiveChanges)
+                    {
+                        textEdit.Apply();
+                    }
+                    else
+                    {
+                        textEdit.Cancel();
+                    }
 
-                textEdit.Dispose();
+                    textEdit.Dispose();
+                }
             }
         }
 
@@ -84,6 +87,7 @@ namespace SelectionWrapper
         {
             textSelection = _textView.Selection;
             snapshotSpans = textSelection.SelectedSpans;
+            selectionLength = snapshotSpans.Max(span => span.Length);
         }
     }
 }
