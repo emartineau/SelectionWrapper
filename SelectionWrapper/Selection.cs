@@ -11,7 +11,7 @@ namespace SelectionWrapper
         ITextSelection TextSelection { get; set; }
         private NormalizedSnapshotSpanCollection snapshotSpans;
         private int selectionLength;
-        private Dictionary<char, char> charPairs = new Dictionary<char, char>()
+        private Dictionary<char, char> characterPairs = new Dictionary<char, char>()
         {
             {'\'', '\''},
             {'\"', '\"'},
@@ -48,16 +48,19 @@ namespace SelectionWrapper
                     return;
                 }
 
-                char leftChar = currentPosition.GetChar();
+                char leftCharacter = currentPosition.GetChar();
 
-                if (charPairs.ContainsKey(leftChar))
+                if (characterPairs.ContainsKey(leftCharacter))
                 {
-                    char rightChar = charPairs[leftChar];
+                    char rightCharacter = characterPairs[leftCharacter];
                     var selectedText = new StringBuilder();
-                    selectedText = snapshotSpans.Aggregate(
-                        selectedText,
-                        (spansAsTextSoFar, span) => spansAsTextSoFar.Append(span.GetText()));
-                    string wrappedSelectionText = $"{selectedText.ToString()}{rightChar}";
+
+                    foreach (var span in snapshotSpans)
+                    {
+                        selectedText.Append(span.GetText());
+                    }
+
+                    string wrappedSelectionText = $"{selectedText.ToString()}{rightCharacter}";
 
                     var textEdit = textBuffer.CreateEdit();
                     textEdit.Insert(TextSelection.Start.Position, wrappedSelectionText);
