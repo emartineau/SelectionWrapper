@@ -16,3 +16,6 @@ Currently supported wrappings are:
 - ' '
 - \` \`
 - " "
+
+## License
+[Apache 2.0](LICENSE)
