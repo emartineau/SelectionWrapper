@@ -1,4 +1,4 @@
-# SelectionWrapper
+# Selection Wrapper
 Wraps selected text depending on the key pressed, like in Visual Studio Code.<br>
 
 ## Usage
