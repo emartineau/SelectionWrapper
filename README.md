@@ -1,3 +1,5 @@
+Download this extension from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=EricMartineau.sw111).
+
 # Selection Wrapper
 Wraps selected text depending on the key pressed, like in Visual Studio Code.<br>
 
