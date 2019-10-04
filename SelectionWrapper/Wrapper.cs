@@ -10,6 +10,7 @@ namespace SelectionWrapper
     {
         public ITextSelection TextSelection { get; set; }
         private NormalizedSnapshotSpanCollection snapshotSpans;
+        private int caretPositionBeforeInput;
         private int selectionLength;
         private Dictionary<char, char> characterPairs = new Dictionary<char, char>()
         {
@@ -28,7 +29,7 @@ namespace SelectionWrapper
             TextSelection = textSelection;
         }
 
-        public void Wrap(ITextBuffer textBuffer)
+        public void Wrap(ITextBuffer textBuffer, int caretPositionAfterInput)
         {
             if (textBuffer == null)
             {
@@ -37,18 +38,18 @@ namespace SelectionWrapper
             if (selectionLength > 0)
             {
                 selectionLength = 0;
-                var currentPosition = TextSelection.End.Position;
-                if (currentPosition.Position == 0)
+                var endOfSelection = TextSelection.End.Position;
+                if (endOfSelection.Position == 0 || caretPositionBeforeInput == caretPositionAfterInput)
                 {
                     return;
                 }
-                currentPosition = currentPosition.Subtract(1);
-                if (currentPosition.Position == textBuffer.CurrentSnapshot.Length)
+                endOfSelection = endOfSelection.Subtract(1);
+                if (endOfSelection.Position == textBuffer.CurrentSnapshot.Length)
                 {
                     return;
                 }
 
-                char leftCharacter = currentPosition.GetChar();
+                char leftCharacter = endOfSelection.GetChar();
 
                 if (characterPairs.ContainsKey(leftCharacter))
                 {
@@ -80,6 +81,7 @@ namespace SelectionWrapper
         }
         public void CaptureSelectionState()
         {
+            caretPositionBeforeInput = TextSelection.Start.Position;
             snapshotSpans = TextSelection.SelectedSpans;
             selectionLength = snapshotSpans.Max(span => span.Length);
         }

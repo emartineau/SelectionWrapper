@@ -37,7 +37,7 @@ namespace SelectionWrapper
         private void TextBuffer_PostChanged(object sender, EventArgs e)
         {
             var textBuffer = sender as ITextBuffer;
-            Wrapper.Wrap(textBuffer);
+            Wrapper.Wrap(textBuffer, _textView.Caret.Position.BufferPosition);
         }
 
         private void TextBuffer_Changing(object sender, TextContentChangingEventArgs e)
