@@ -6,9 +6,9 @@ using System.Text;
 
 namespace SelectionWrapper
 {
-    internal class Selection
+    internal class Wrapper
     {
-        ITextSelection TextSelection { get; set; }
+        public ITextSelection TextSelection { get; set; }
         private NormalizedSnapshotSpanCollection snapshotSpans;
         private int selectionLength;
         private Dictionary<char, char> characterPairs = new Dictionary<char, char>()
@@ -23,7 +23,7 @@ namespace SelectionWrapper
         };
 
 
-        public Selection(ITextSelection textSelection)
+        public Wrapper(ITextSelection textSelection)
         {
             TextSelection = textSelection;
         }

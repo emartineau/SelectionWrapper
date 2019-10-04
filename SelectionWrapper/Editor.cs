@@ -2,10 +2,7 @@
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
 
 namespace SelectionWrapper
 {
@@ -16,25 +13,37 @@ namespace SelectionWrapper
     {
         private IWpfTextView _textView;
 
-        public Selection Selection { get; private set; }
+        public Wrapper Wrapper { get; private set; }
 
         public void TextViewCreated(IWpfTextView textView)
         {
             _textView = textView;
+            _textView.GotAggregateFocus += OnTextViewFocus;
             _textView.TextBuffer.Changing += TextBuffer_Changing;
             _textView.TextBuffer.PostChanged += TextBuffer_PostChanged;
-            Selection = new Selection(textView.Selection);
+
+            Wrapper = new Wrapper(_textView.Selection);
+        }
+
+        void OnTextViewFocus(object sender, EventArgs e)
+        {
+            var focusedTextView = sender as IWpfTextView;
+            if (focusedTextView != null)
+            {
+                _textView = focusedTextView;
+            }
         }
 
         private void TextBuffer_PostChanged(object sender, EventArgs e)
         {
             var textBuffer = sender as ITextBuffer;
-            Selection.Wrap(textBuffer);
+            Wrapper.Wrap(textBuffer);
         }
 
         private void TextBuffer_Changing(object sender, TextContentChangingEventArgs e)
         {
-            Selection.CaptureSelectionState();
+            Wrapper.TextSelection = _textView.Selection;
+            Wrapper.CaptureSelectionState();
         }
     }
 }
