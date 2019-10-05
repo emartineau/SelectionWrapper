@@ -29,7 +29,7 @@ namespace SelectionWrapper
             TextSelection = textSelection;
         }
 
-        public void Wrap(ITextBuffer textBuffer, int caretPositionAfterInput)
+        public void Wrap(ITextBuffer textBuffer)
         {
             if (textBuffer == null)
             {
@@ -39,6 +39,7 @@ namespace SelectionWrapper
             {
                 selectionLength = 0;
                 var endOfSelection = TextSelection.End.Position;
+                int caretPositionAfterInput = TextSelection.TextView.Caret.Position.BufferPosition;
                 if (endOfSelection.Position == 0 || caretPositionBeforeInput == caretPositionAfterInput)
                 {
                     return;
