@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Utilities;
 using System;
 using System.ComponentModel.Composition;
@@ -11,18 +12,22 @@ namespace SelectionWrapper
     [TextViewRole(PredefinedTextViewRoles.Document)]
     internal sealed class EditorListener : IWpfTextViewCreationListener
     {
-        private IWpfTextView _textView;
+        private IWpfTextView TextView { get; set; }
+        private IEditorOperations EditorOperations { get; set; }
 
+        [Import]
+        private IEditorOperationsFactoryService editorOperationsFactory = null;
         public Wrapper Wrapper { get; private set; }
 
         public void TextViewCreated(IWpfTextView textView)
         {
-            _textView = textView;
-            _textView.GotAggregateFocus += OnTextViewFocus;
-            _textView.TextBuffer.Changing += TextBuffer_Changing;
-            _textView.TextBuffer.PostChanged += TextBuffer_PostChanged;
+            TextView = textView;
+            TextView.GotAggregateFocus += OnTextViewFocus;
+            TextView.TextBuffer.Changing += TextBuffer_Changing;
+            TextView.TextBuffer.PostChanged += TextBuffer_PostChanged;
 
-            Wrapper = new Wrapper(_textView.Selection);
+            EditorOperations = editorOperationsFactory.GetEditorOperations(TextView);
+            Wrapper = new Wrapper(EditorOperations);
         }
 
         void OnTextViewFocus(object sender, EventArgs e)
@@ -30,7 +35,9 @@ namespace SelectionWrapper
             var focusedTextView = sender as IWpfTextView;
             if (focusedTextView != null)
             {
-                _textView = focusedTextView;
+                TextView = focusedTextView;
+                EditorOperations = editorOperationsFactory.GetEditorOperations(TextView);
+                Wrapper.EditorOperations = EditorOperations;
             }
         }
 
@@ -42,7 +49,6 @@ namespace SelectionWrapper
 
         private void TextBuffer_Changing(object sender, TextContentChangingEventArgs e)
         {
-            Wrapper.TextSelection = _textView.Selection;
             Wrapper.CaptureSelectionState();
         }
     }

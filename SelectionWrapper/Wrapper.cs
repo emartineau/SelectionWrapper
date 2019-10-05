@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Operations;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,21 @@ namespace SelectionWrapper
 {
     internal class Wrapper
     {
-        public ITextSelection TextSelection { get; set; }
-        private NormalizedSnapshotSpanCollection snapshotSpans;
-        private int selectionStartPositionBeforeInput;
-        private int selectionLength;
-        private Dictionary<char, char> characterPairs = new Dictionary<char, char>()
+        private IEditorOperations editorOperations;
+
+        public IEditorOperations EditorOperations
+        {
+            get => editorOperations;
+            set
+            {
+                editorOperations = value;
+                TextSelection = editorOperations.TextView.Selection;
+            }
+        }
+        private ITextSelection TextSelection { get; set; }
+        private int SelectionStartPositionBeforeInput { get; set; }
+        private string SelectedText { get; set; }
+        private Dictionary<char, char> CharacterPairs { get; } = new Dictionary<char, char>()
         {
             {'\'', '\''},
             {'\"', '\"'},
@@ -24,9 +35,9 @@ namespace SelectionWrapper
         };
 
 
-        public Wrapper(ITextSelection textSelection)
+        public Wrapper(IEditorOperations editorOperations)
         {
-            TextSelection = textSelection;
+            EditorOperations = editorOperations;
         }
 
         public void Wrap(ITextBuffer textBuffer)
@@ -35,15 +46,14 @@ namespace SelectionWrapper
             {
                 return;
             }
-            if (selectionLength > 0)
+            if (SelectedText.Length > 0)
             {
-                selectionLength = 0;
                 var endOfSelection = TextSelection.End.Position;
 
                 // check if the caret ends up in a different position from the initial selection's starting point
                 // if the caret doesn't move, we assume the user's last input did not add to the buffer (e.g. deletion)
                 int caretPositionAfterInput = TextSelection.TextView.Caret.Position.BufferPosition;
-                if (endOfSelection.Position == 0 || selectionStartPositionBeforeInput == caretPositionAfterInput)
+                if (endOfSelection.Position == 0 || SelectionStartPositionBeforeInput == caretPositionAfterInput)
                 {
                     return;
                 }
@@ -55,17 +65,10 @@ namespace SelectionWrapper
 
                 char leftCharacter = endOfSelection.GetChar();
 
-                if (characterPairs.ContainsKey(leftCharacter))
+                if (CharacterPairs.ContainsKey(leftCharacter))
                 {
-                    char rightCharacter = characterPairs[leftCharacter];
-                    var selectedText = new StringBuilder();
-
-                    foreach (var span in snapshotSpans)
-                    {
-                        selectedText.Append(span.GetText());
-                    }
-
-                    string wrappedSelectionText = $"{selectedText.ToString()}{rightCharacter}";
+                    char rightCharacter = CharacterPairs[leftCharacter];
+                    string wrappedSelectionText = $"{SelectedText}{rightCharacter}";
 
                     var textEdit = textBuffer.CreateEdit();
                     textEdit.Insert(TextSelection.Start.Position, wrappedSelectionText);
@@ -85,9 +88,8 @@ namespace SelectionWrapper
         }
         public void CaptureSelectionState()
         {
-            selectionStartPositionBeforeInput = TextSelection.Start.Position;
-            snapshotSpans = TextSelection.SelectedSpans;
-            selectionLength = snapshotSpans.Max(span => span.Length);
+            SelectedText = EditorOperations.SelectedText;
+            SelectionStartPositionBeforeInput = TextSelection.Start.Position;
         }
     }
 }
