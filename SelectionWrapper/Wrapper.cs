@@ -10,7 +10,7 @@ namespace SelectionWrapper
     {
         public ITextSelection TextSelection { get; set; }
         private NormalizedSnapshotSpanCollection snapshotSpans;
-        private int caretPositionBeforeInput;
+        private int selectionStartPositionBeforeInput;
         private int selectionLength;
         private Dictionary<char, char> characterPairs = new Dictionary<char, char>()
         {
@@ -39,8 +39,11 @@ namespace SelectionWrapper
             {
                 selectionLength = 0;
                 var endOfSelection = TextSelection.End.Position;
+
+                // check if the caret ends up in a different position from the initial selection's starting point
+                // if the caret doesn't move, we assume the user's last input did not add to the buffer (e.g. deletion)
                 int caretPositionAfterInput = TextSelection.TextView.Caret.Position.BufferPosition;
-                if (endOfSelection.Position == 0 || caretPositionBeforeInput == caretPositionAfterInput)
+                if (endOfSelection.Position == 0 || selectionStartPositionBeforeInput == caretPositionAfterInput)
                 {
                     return;
                 }
@@ -82,7 +85,7 @@ namespace SelectionWrapper
         }
         public void CaptureSelectionState()
         {
-            caretPositionBeforeInput = TextSelection.Start.Position;
+            selectionStartPositionBeforeInput = TextSelection.Start.Position;
             snapshotSpans = TextSelection.SelectedSpans;
             selectionLength = snapshotSpans.Max(span => span.Length);
         }
