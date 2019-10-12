@@ -70,19 +70,7 @@ namespace SelectionWrapper
                     char rightCharacter = CharacterPairs[leftCharacter];
                     string wrappedSelectionText = $"{SelectedText}{rightCharacter}";
 
-                    var textEdit = textBuffer.CreateEdit();
-                    textEdit.Insert(TextSelection.Start.Position, wrappedSelectionText);
-
-                    if (textEdit.HasEffectiveChanges)
-                    {
-                        textEdit.Apply();
-                    }
-                    else
-                    {
-                        textEdit.Cancel();
-                    }
-
-                    textEdit.Dispose();
+                    EditorOperations.InsertText(wrappedSelectionText);
                 }
             }
         }
