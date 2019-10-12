@@ -65,7 +65,10 @@ namespace SelectionWrapper
 
                 char leftCharacter = endOfSelection.GetChar();
 
-                if (CharacterPairs.ContainsKey(leftCharacter))
+                // subject to change: only wrap when the user types/pastes a single wrapping character 
+                // or multiple characters ending with an "opening" wrapping character
+                if (CharacterPairs.ContainsKey(leftCharacter)
+                    && (caretPositionAfterInput - 1 == SelectionStartPositionBeforeInput || !CharacterPairs.ContainsValue(leftCharacter)))
                 {
                     char rightCharacter = CharacterPairs[leftCharacter];
                     string wrappedSelectionText = $"{SelectedText}{rightCharacter}";
