@@ -42,7 +42,7 @@ namespace SelectionWrapper
 
         public void Wrap(ITextBuffer textBuffer)
         {
-            if (textBuffer == null)
+            if (textBuffer == null || SelectedText == null)
             {
                 return;
             }
