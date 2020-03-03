@@ -21,7 +21,9 @@ namespace SelectionWrapper
             }
         }
         private ITextSelection TextSelection { get; set; }
-        private int SelectionStartPositionBeforeInput { get; set; }
+        private NormalizedSnapshotSpanCollection SelectedSpans { get; set; }
+        private SnapshotPoint SelectionStartPositionBeforeInput { get; set; }
+        private SnapshotPoint SelectionEndPositionBeforeInput { get; set; }
         private string SelectedText { get; set; }
         private Dictionary<char, char> CharacterPairs { get; } = new Dictionary<char, char>()
         {
@@ -42,11 +44,11 @@ namespace SelectionWrapper
 
         public void Wrap(ITextBuffer textBuffer)
         {
-            if (textBuffer == null || SelectedText == null)
+            if (textBuffer == null || SelectedSpans.Count == 0)
             {
                 return;
             }
-            if (SelectedText.Length > 0)
+            if (!SelectedSpans.All(span => span.IsEmpty))
             {
                 var endOfSelection = TextSelection.End.Position;
 
@@ -71,16 +73,33 @@ namespace SelectionWrapper
                     && (caretPositionAfterInput - 1 == SelectionStartPositionBeforeInput || !CharacterPairs.ContainsValue(leftCharacter)))
                 {
                     char rightCharacter = CharacterPairs[leftCharacter];
-                    string wrappedSelectionText = $"{SelectedText}{rightCharacter}";
+                    string replacingText = SelectedSpans.Aggregate(
+                        new StringBuilder(),
+                        (text, span) =>
+                        {
+                            var spanLine = span.Snapshot.GetLineFromPosition(span.Start);
+                            string lineEnding = SelectedSpans.Count > 1 ? spanLine.GetLineBreakText() : string.Empty;
+                            StringBuilder replacingSpan = text.Append($"{span.GetText()}{rightCharacter}{lineEnding}");
+                            return replacingSpan;
+                        }, sb => sb.ToString());
 
-                    EditorOperations.InsertText(wrappedSelectionText);
+                    if (TextSelection.Mode == TextSelectionMode.Box)
+                    {
+                        VirtualSnapshotPoint boxSelectionStart, boxSelectionEnd;
+                        EditorOperations.InsertTextAsBox(replacingText, out boxSelectionStart, out boxSelectionEnd);
+                    }
+                    else
+                    {
+                        EditorOperations.InsertText(replacingText);
+                    }
                 }
             }
         }
         public void CaptureSelectionState()
         {
-            SelectedText = EditorOperations.SelectedText;
+            SelectedSpans = EditorOperations.TextView.Selection.SelectedSpans;
             SelectionStartPositionBeforeInput = TextSelection.Start.Position;
+            SelectionEndPositionBeforeInput = TextSelection.End.Position;
         }
     }
 }
