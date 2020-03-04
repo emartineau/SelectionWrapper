@@ -23,8 +23,6 @@ namespace SelectionWrapper
         private ITextSelection TextSelection { get; set; }
         private NormalizedSnapshotSpanCollection SelectedSpans { get; set; }
         private SnapshotPoint SelectionStartPositionBeforeInput { get; set; }
-        private SnapshotPoint SelectionEndPositionBeforeInput { get; set; }
-        private string SelectedText { get; set; }
         private Dictionary<char, char> CharacterPairs { get; } = new Dictionary<char, char>()
         {
             {'\'', '\''},
@@ -99,7 +97,6 @@ namespace SelectionWrapper
         {
             SelectedSpans = EditorOperations.TextView.Selection.SelectedSpans;
             SelectionStartPositionBeforeInput = TextSelection.Start.Position;
-            SelectionEndPositionBeforeInput = TextSelection.End.Position;
         }
     }
 }
