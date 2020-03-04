@@ -3,6 +3,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DeployTargetInstanceId>
     </DeployTargetInstanceId>
-    <StartProgram>C:\Program Files %28x86%29\Microsoft Visual Studio\2019\Community\Common7\IDE\devenv.exe</StartProgram>
+    <StartProgram>E:\Programs\Visual Studio\2019\Common7\IDE\devenv.exe</StartProgram>
   </PropertyGroup>
 </Project>

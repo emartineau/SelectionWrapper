@@ -42,7 +42,9 @@ namespace SelectionWrapper
 
         public void Wrap(ITextBuffer textBuffer)
         {
-            if (textBuffer == null || SelectedSpans.Count == 0)
+            if (textBuffer == null || SelectedSpans.Count == 0 
+                // don't wrap if selection is multi-cursor
+                || (SelectedSpans.Count > 1 && TextSelection.Mode == TextSelectionMode.Stream))
             {
                 return;
             }
