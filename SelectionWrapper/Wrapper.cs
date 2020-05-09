@@ -67,11 +67,10 @@ namespace SelectionWrapper
 
                 char leftCharacter = endOfSelection.GetChar();
 
-                // subject to change: only wrap when the user types/pastes a single wrapping character 
-                // or multiple characters ending with an "opening" wrapping character
+                // Only wrap when the user types/pastes a single wrapping character
                 if (CharacterPairs.ContainsKey(leftCharacter)
                     && ((TextSelection.Mode == TextSelectionMode.Box && SelectedSpans.First().Start.Position == EditorOperations.TextView.Selection.SelectedSpans.First().Start.Position - 1)
-                    || (caretPositionAfterInput - 1 == SelectionStartPositionBeforeInput || !CharacterPairs.ContainsValue(leftCharacter))))
+                    || (caretPositionAfterInput - 1 == SelectionStartPositionBeforeInput)))
                 {
                     char rightCharacter = CharacterPairs[leftCharacter];
                     string replacingText = SelectedSpans.Aggregate(
