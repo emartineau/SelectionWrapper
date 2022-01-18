@@ -14,9 +14,9 @@ namespace SelectionWrapper
     {
         private IWpfTextView TextView { get; set; }
         private IEditorOperations EditorOperations { get; set; }
-
         [Import]
-        private IEditorOperationsFactoryService editorOperationsFactory = null;
+        private readonly IEditorOperationsFactoryService editorOperationsFactory;
+
         public Wrapper Wrapper { get; private set; }
 
         public void TextViewCreated(IWpfTextView textView)
@@ -32,8 +32,7 @@ namespace SelectionWrapper
 
         void OnTextViewFocus(object sender, EventArgs e)
         {
-            var focusedTextView = sender as IWpfTextView;
-            if (focusedTextView != null)
+            if (sender is IWpfTextView focusedTextView)
             {
                 TextView = focusedTextView;
                 EditorOperations = editorOperationsFactory.GetEditorOperations(TextView);
@@ -43,8 +42,7 @@ namespace SelectionWrapper
 
         private void TextBuffer_PostChanged(object sender, EventArgs e)
         {
-            var textBuffer = sender as ITextBuffer;
-            Wrapper.Wrap(textBuffer);
+            Wrapper.Wrap(sender as ITextBuffer);
         }
 
         private void TextBuffer_Changing(object sender, TextContentChangingEventArgs e)
