@@ -99,7 +99,7 @@ namespace SelectionWrapper
 
                             StringBuilder replacingSpan = sb.Append($"{span.GetText()}.length; i++) {Environment.NewLine} {{ {Environment.NewLine} " +
                                 $"console.log({span.GetText()}[i]) {Environment.NewLine} }}");
-                            return replacingSpan;
+                            return replacingSpan; 
 
                         }
                         else if (leftCharacter == 'l')
