@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="Dev16.14984526-5c4e-4864-b0c8-5be9ff7fe889" Version="0.3.3" Language="en-US" Publisher="Eric Martineau" />
+        <Identity Id="Dev16.14984526-5c4e-4864-b0c8-5be9ff7fe889" Version="0.3.4" Language="en-US" Publisher="Eric Martineau" />
         <DisplayName>Selection Wrapper</DisplayName>
         <Description xml:space="preserve">Wraps selected text depending on the key pressed</Description>
         <Icon>selection_wrapper_icon.png</Icon>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,9 @@ namespace SelectionWrapper
             {'[', ']' },
             {'{', '}' },
             {'`', '`' },
+            {'c', 'c' },
+            {'l', 'l' },
+            {'f', 'f' },
             {'<', '>' }
         };
 
@@ -79,8 +83,44 @@ namespace SelectionWrapper
                     {
                         var spanLine = span.Snapshot.GetLineFromPosition(span.Start);
                         string lineEnding = SelectedSpans.Count > 1 ? spanLine.GetLineBreakText() : string.Empty;
-                        StringBuilder replacingSpan = text.Append($"{span.GetText()}{rightCharacter}{lineEnding}");
-                        return replacingSpan;
+
+                        if (leftCharacter == 'c')
+                        {
+                            StringBuilder sb = new StringBuilder("console.log('", 300);
+
+                            StringBuilder replacingSpan = sb.Append($"{span.GetText()}',{span.GetText()}) {Environment.NewLine}");
+                            return replacingSpan;
+
+                        }
+                        else if (leftCharacter == 'f')
+                        {
+
+                            StringBuilder sb = new StringBuilder("for (var i = 0; i < ", 300);
+
+                            StringBuilder replacingSpan = sb.Append($"{span.GetText()}.length; i++) {Environment.NewLine} {{ {Environment.NewLine} " +
+                                $"console.log({span.GetText()}[i]) {Environment.NewLine} }}");
+                            return replacingSpan; 
+
+                        }
+                        else if (leftCharacter == 'l')
+                        {
+                            StringBuilder sb = new StringBuilder("", 300);
+
+                            StringBuilder replacingSpan = sb.Append($"'{span.GetText()}',{span.GetText()}");
+                            return replacingSpan;
+
+                        }
+
+
+                        else
+                        {
+                            StringBuilder replacingSpan = text.Append($"{span.GetText()}{rightCharacter}{lineEnding}");
+                            return replacingSpan;
+
+                        };
+
+
+
                     }, sb => sb.ToString());
 
                 if (TextSelection.Mode == TextSelectionMode.Box)
@@ -89,6 +129,12 @@ namespace SelectionWrapper
                 }
                 else
                 {
+                    if (leftCharacter == 'c' || leftCharacter == 'l' || leftCharacter == 'f')
+                    {
+
+                        editorOperations.Backspace();
+                    }
+
                     EditorOperations.InsertText(replacingText);
                 }
             }
