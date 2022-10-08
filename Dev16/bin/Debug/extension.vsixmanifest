@@ -1,0 +1,24 @@
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
+  <Metadata>
+    <Identity Id="Dev16.14984526-5c4e-4864-b0c8-5be9ff7fe889" Version="0.3.4" Language="en-US" Publisher="Eric Martineau" />
+    <DisplayName>Selection Wrapper</DisplayName>
+    <Description xml:space="preserve">Wraps selected text depending on the key pressed</Description>
+    <Icon>selection_wrapper_icon.png</Icon>
+    <Preview>true</Preview>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[16.0, 17.0)">
+      <ProductArchitecture>x86</ProductArchitecture>
+    </InstallationTarget>
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" Version="[4.5,)" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" Path="SW_VS2019.dll" />
+  </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[16.0,17.0)" DisplayName="Visual Studio core editor" />
+  </Prerequisites>
+</PackageManifest>

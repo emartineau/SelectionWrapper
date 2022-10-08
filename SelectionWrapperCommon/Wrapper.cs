@@ -95,7 +95,7 @@ namespace SelectionWrapper
                         else if (leftCharacter == 'f')
                         {
 
-                            StringBuilder sb = new StringBuilder("for (int i = 0; i < ", 300);
+                            StringBuilder sb = new StringBuilder("for (var i = 0; i < ", 300);
 
                             StringBuilder replacingSpan = sb.Append($"{span.GetText()}.length; i++) {Environment.NewLine} {{ {Environment.NewLine} " +
                                 $"console.log({span.GetText()}[i]) {Environment.NewLine} }}");
