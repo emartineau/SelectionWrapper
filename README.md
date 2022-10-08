@@ -1,6 +1,7 @@
 Download this extension from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=EricMartineau.sw111).
 
-#Added in this fork
+# Added in this fork
+
 'c' adds a console.log
 'l' adds a quoted line
 'f' adds a for loop
